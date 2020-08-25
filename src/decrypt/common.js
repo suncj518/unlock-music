@@ -4,6 +4,7 @@ const XmDecrypt = require("./xm");
 const QmcDecrypt = require("./qmc");
 const RawDecrypt = require("./raw");
 const TmDecrypt = require("./tm");
+const KgmDecrypt = require("./kgm");
 
 export async function CommonDecrypt(file) {
     let raw_ext = file.name.substring(file.name.lastIndexOf(".") + 1, file.name.length).toLowerCase();
@@ -46,12 +47,17 @@ export async function CommonDecrypt(file) {
         case "tm6":// QQ Music IOS M4a
             rt_data = await TmDecrypt.Decrypt(file.raw, raw_filename);
             break;
+        case "vpr":
+        case "kgm":
+        case "kgma":
+            rt_data = await KgmDecrypt.Decrypt(file.raw, raw_filename, raw_ext);
+            break
         default:
             rt_data = {status: false, message: "不支持此文件格式",}
     }
 
     if (!rt_data.rawExt) rt_data.rawExt = raw_ext;
     if (!rt_data.rawFilename) rt_data.rawFilename = raw_filename;
-
+    console.log(rt_data);
     return rt_data;
 }
